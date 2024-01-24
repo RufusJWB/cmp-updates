@@ -73,6 +73,8 @@ normative:
   RFC9112:
   I-D.ietf-lamps-rfc4210bis:
   ITU.X690.1994:
+  ITU.X691.2021:
+  ITU.X697.2021
 
 --- abstract
 
@@ -221,10 +223,11 @@ in isolation.
 ## General Form
 {: id="sect-3.3"}
 
-A DER-encoded {{ITU.X690.1994}} PKIMessage [RFCCCCC] is sent as the
-entity-body of an HTTP POST request.  If this HTTP request is
-successful, the server returns the CMP response in the body of the
-HTTP response.  The HTTP response status code in this case MUST be
+A client encodes the PKIMessage [RFCCCCC] as Distinguished Encoding Rules (DER) {{ITU.X690.1994}}, JSON Enconding Rules (JSON) {{ITU.X697.2021}} or Packed Encoding Rules (PER) {{ITU.X691.2021}} data object.  The client chooses the encoding rules depending on his business environment.  For highest backward compatibility the client will choose DER encoding, for simplified message handling JSON encoding and in ressource constrained environments PER encoding.
+
+This data object is sent as the entity-body of an HTTP POST request.  If this HTTP request is
+successful, the server MUST return the CMP response in the body of the
+HTTP response with the same encoding choosen by the client for the request.  The HTTP response status code in this case MUST be
 200; other "Successful 2xx" codes MUST NOT be used for this purpose.
 HTTP responses to pushed CMP Announcement messages (i.e., CA
 Certificate Announcement, Certificate Announcement, Revocation
@@ -241,16 +244,19 @@ could be misused for permanent denial of service.
 All applicable "Client Error 4xx" or "Server Error 5xx" status codes
 MAY be used to inform the client about errors.
 
+A conforming server MUST support DER encoding and SHOULD support JSON and PER encoding.
 
 ## Header Fields
 {: id="sect-3.4"}
 
-The Internet Media Type "application/pkixcmp" MUST be set in the HTTP
-Content-Type header field when conveying a PKIMessage.
+Depending on the encoding scheme of the PKIMessage the HTTP Content-Type header field MUST be set.
+
+*) For DER encoding the Internet Media Type "application/pkixcmp" MUST be used.
+*) For JSON encoding the Internet Media Type "application/pkixcmp+json" MUST be used.
+*) For PER encoding the Internet Media Type "application/pkixcmp+per" MUST be used.
 
 The Content-Length header field SHOULD be provided, giving the length of
-the ASN.1-encoded PKIMessages.
-
+the encoded PKIMessages.
 
 ## Communication Workflow
 {: id="sect-3.5"}
@@ -364,7 +370,7 @@ when a problem occurs.
 While all defined features of the HTTP protocol are available to
 implementations, they SHOULD keep the protocol utilization as simple
 as possible.  For example, there is no benefit in using chunked
-Transfer-Encoding, as the length of an ASN.1 sequence is known when
+Transfer-Encoding, as the length of an encoded PKIMessage is known when
 starting to send it.
 
 There is no need for the clients to send an "Expect" request-header
@@ -433,8 +439,8 @@ users:
 
 # IANA Considerations {#sect-6}
 
-No further action by the IANA is necessary for this document or any anticipated
-updates.
+**The suffix "+PER" is to be registered as Structured Syntax Suffix.**
+
 
 
 # Acknowledgments {#sect-7}

@@ -1648,8 +1648,7 @@ When protection is applied, the following structure is used:
   PKIProtection ::= BIT STRING
 ~~~~
 
-The input to the calculation of PKIProtection is the DER encoding of
-the following data structure:
+The calculation of PKIProtection is performed on the following data structure:
 
 ~~~~ asn.1
   ProtectedPart ::= SEQUENCE {
@@ -1657,6 +1656,8 @@ the following data structure:
      body      PKIBody
   }
 ~~~~
+
+It is to be encoded according the selected encoding schema for the transmission of the CMP message {{RFC6712bis}} Section 5.3 and used as input for the calculation of PKIProtection.
 
 There MAY be cases in which the PKIProtection BIT STRING is
 deliberately not used to protect a message (i.e., this OPTIONAL field
