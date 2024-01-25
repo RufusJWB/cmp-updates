@@ -1657,7 +1657,7 @@ The calculation of PKIProtection is performed on the following data structure:
   }
 ~~~~
 
-It is to be encoded according the selected encoding schema for the transmission of the CMP message {{RFC6712bis}} Section 5.3 and used as input for the calculation of PKIProtection.
+It is to be encoded according the selected encoding schema for the transmittal of the CMP message {{RFC6712bis}} Section 5.3 and used as input for the calculation of PKIProtection.
 
 There MAY be cases in which the PKIProtection BIT STRING is
 deliberately not used to protect a message (i.e., this OPTIONAL field
